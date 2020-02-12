@@ -110,3 +110,27 @@ router.delete("/:id", (req, res) => {
         })
 })
 
+router.put("/:id", (req, res) => {
+    const { id } = req.params;
+    const payload = req.body;
+
+    if (req.body.title && req.body.contents){
+        Posts.findById(id)
+            .then(post => {
+                !post[0]
+                    ? res.status(404).json({errorMessage: "ID doesn't exist"})
+                    : Posts.update(id, payload)
+                        .then(updatedPost => {
+                            res.status(200).json(updatedPost)
+                        })
+                        .catch(err => {
+                            res.status(500).json({errorMessage: "Error saving updates"})
+                        })
+            })
+            .catch(err => {
+                res.status(500).json({errorMessage: "Couldn't be retrieved"})
+            })
+    }else{
+        res.status(400).json({errorMessage: "Please provide title and contents in post update"})
+        }   
+})
