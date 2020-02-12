@@ -21,13 +21,30 @@ router.get('/:id', (req, res) => {
     Posts.findById(id)
     .then(post => {
         !post[0]
-        ? res.status(404.json({ errorMessage: "Id does not exist"}))
+        ? res.status(404).json({ errorMessage: "Id does not exist"}))
         : res.status(200).json(post)
     })
     .catch(err => {
         console.log(err)
         res.status(500).json({
             errorMessage: "Couldn't retrieve posts"
+        })
+    })
+})
+
+router.get('/:id/comments', (req, res) => {
+    const { id } = req.params
+
+    Posts.findPostComments(id)
+    .then(comment => {
+        comment[0]
+        ? res.status(200).json(comment)
+        : res.status(404).json({ errorMessage: "Comment ID does not exist"})
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({
+            errorMessage: "Couldn't retrieve comments"
         })
     })
 })
