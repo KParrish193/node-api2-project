@@ -95,3 +95,18 @@ router.post('/:id/comments', (req, res) => {
         res.status(400).json({errorMessage: "Please provide text for the comment"})
     }
 })
+
+router.delete("/:id", (req, res) => {
+    const { id } = req.params
+
+    Posts.remove(id)
+        .then(removedPost => {
+            removedPost === 1
+            ? res.status(200).json(removedPost)
+            : res.status(404).json({ errorMessage: "Post ID to delete doesn't exist"})
+        })
+        .catch(err => {
+            res.status(500).json({errorMessage: "Couldn't remove post"})
+        })
+})
+
